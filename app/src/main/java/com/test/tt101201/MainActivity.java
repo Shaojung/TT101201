@@ -15,15 +15,16 @@ public class MainActivity extends AppCompatActivity {
         tv = (TextView) findViewById(R.id.textView);
         tv.setText(String.valueOf(i));
         MyClass c = new MyClass();
-        c.execute(10);
+        c.execute(5);
 
     }
 
     class MyClass extends AsyncTask<Integer, Integer, String>
     {
-        int i = 10;
+        int i;
         @Override
         protected String doInBackground(Integer... params) {
+            i = params[0];
             do {
                 try {
                     Thread.sleep(1000);
@@ -42,6 +43,12 @@ public class MainActivity extends AppCompatActivity {
             tv.setText(String.valueOf(values[0]));
 
             super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            tv.setText(s);
+            super.onPostExecute(s);
         }
     }
 }
