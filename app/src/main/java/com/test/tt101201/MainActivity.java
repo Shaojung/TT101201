@@ -14,26 +14,34 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         tv = (TextView) findViewById(R.id.textView);
         tv.setText(String.valueOf(i));
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                do{
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    i--;
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            tv.setText(String.valueOf(i));
-                        }
-                    });
-                } while (i > 0);
-            }
-        }.start();
+        MyClass c = new MyClass();
+        c.execute(10);
+
     }
 
+    class MyClass extends AsyncTask<Integer, Integer, String>
+    {
+        int i = 10;
+        @Override
+        protected String doInBackground(Integer... params) {
+            do {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                i--;
+                publishProgress(i);
+            }while (i > 0);
+
+            return "OK";
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            tv.setText(String.valueOf(values[0]));
+
+            super.onProgressUpdate(values);
+        }
+    }
 }
